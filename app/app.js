@@ -23,9 +23,17 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
-
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
+app.set('views', __dirname + '/public');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
+app.get('/test', function(req, res){
+  res.render('test.html',
+    {text: "New test"}
+  );
+});
 
 app.get('/login', function(req, res) {
 
@@ -80,7 +88,6 @@ app.get('/callback', function(req, res) {
 });
 
 app.get('/refresh_token', function(req, res) {
-
   // requesting access token from refresh token
   spotifyApi.refreshAccessToken()
   .then(function(data) {
